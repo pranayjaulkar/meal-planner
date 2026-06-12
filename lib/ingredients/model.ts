@@ -31,8 +31,14 @@ const ingredientSchema = new mongoose.Schema<IngredientDocument>(
   },
   {
     timestamps: true,
-  }
+  },
 );
+
+ingredientSchema.virtual("meals", {
+  ref: "Meal",
+  localField: "_id",
+  foreignField: "ingredients.ingredientId",
+});
 
 ingredientSchema.index({ userId: 1, name: 1 });
 

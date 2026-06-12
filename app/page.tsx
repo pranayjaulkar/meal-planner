@@ -8,6 +8,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { getCurrentUser } from "@/lib/auth/session";
 import { listUserIngredients } from "@/lib/ingredients/service";
 import { getHealthProfile } from "@/lib/profile/service";
+import { CalorieProgressCard } from "@/components/profile/goal";
+import { MealList } from "@/components/meals/meal-list";
+import { MealsCardHeader } from "@/components/meals/meal-cards-header";
+import { CreateMealModal } from "@/components/meals/create-meal-modal";
+import { getMeals } from "@/lib/meals/service";
 
 type HomeProps = {
   searchParams: Promise<{
@@ -24,8 +29,11 @@ export default async function Home({ searchParams }: HomeProps) {
 
   const { ingredientQuery } = await searchParams;
   const query = ingredientQuery?.trim() || undefined;
-  const profile = await getHealthProfile(user.userId);
-  const ingredients = await listUserIngredients(user.userId, { query });
+  const [profile, ingredients, meals] = await Promise.all([
+    getHealthProfile(user.userId),
+    listUserIngredients(user.userId, { query }),
+    getMeals(user.userId),
+  ]);
 
   return (
     <main className="w-full flex-1 px-4 py-8 sm:px-6 lg:px-8">
@@ -41,16 +49,20 @@ export default async function Home({ searchParams }: HomeProps) {
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(22rem,0.8fr)]">
           <Card>
             <CardHeader>
-              <CardTitle>Ingredients</CardTitle>
-              <CardDescription>Create, search, edit, and delete your ingredient library.</CardDescription>
+              <CardTitle>Daily Goal</CardTitle>
+              <CardDescription>Track your daily consumption.</CardDescription>
             </CardHeader>
-            <CardContent className="grid gap-6">
-              <IngredientCreateForm />
-              <IngredientSearchForm query={query} />
-              <IngredientList ingredients={ingredients} query={query} />
+            <CardContent>
+              <CalorieProgressCard caloriesEaten={1850} calorieGoal={2200} profile={profile} />
             </CardContent>
           </Card>
-
+          <Card>
+            <MealsCardHeader />
+            <CardContent>
+              <MealList meals={meals} query="" />
+              <CreateMealModal ingredients={ingredients} />
+            </CardContent>
+          </Card>
           <Card>
             <CardHeader>
               <CardTitle>Health profile</CardTitle>
@@ -58,6 +70,17 @@ export default async function Home({ searchParams }: HomeProps) {
             </CardHeader>
             <CardContent>
               <ProfileForm profile={profile} />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Ingredients</CardTitle>
+              <CardDescription>Create, search, edit, and delete your ingredient library.</CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-6">
+              <IngredientCreateForm />
+              <IngredientSearchForm query={query} />
+              <IngredientList ingredients={ingredients} query={query} />
             </CardContent>
           </Card>
         </div>

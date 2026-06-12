@@ -27,7 +27,7 @@ const healthProfileSchema = new mongoose.Schema(
       max: 300,
     },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const userSchema = new mongoose.Schema<UserDocument>(
@@ -64,11 +64,10 @@ const userSchema = new mongoose.Schema<UserDocument>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const UserModel =
-  (mongoose.models.User as mongoose.Model<UserDocument>) ||
-  mongoose.model<UserDocument>("User", userSchema);
+  (mongoose.models.User as mongoose.Model<UserDocument>) || mongoose.model<UserDocument>("User", userSchema);
 
 export default UserModel;

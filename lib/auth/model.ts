@@ -1,6 +1,35 @@
 import mongoose from "mongoose";
 import type { UserDocument } from "./types";
 
+const healthProfileSchema = new mongoose.Schema(
+  {
+    age: {
+      type: Number,
+      required: true,
+      min: 13,
+      max: 120,
+    },
+    gender: {
+      type: String,
+      required: true,
+      enum: ["male", "female"],
+    },
+    height: {
+      type: Number,
+      required: true,
+      min: 100,
+      max: 250,
+    },
+    weight: {
+      type: Number,
+      required: true,
+      min: 30,
+      max: 300,
+    },
+  },
+  { _id: false }
+);
+
 const userSchema = new mongoose.Schema<UserDocument>(
   {
     name: {
@@ -27,6 +56,10 @@ const userSchema = new mongoose.Schema<UserDocument>(
       required: true,
       minlength: 8,
       maxlength: 128,
+    },
+    healthProfile: {
+      type: healthProfileSchema,
+      required: false,
     },
   },
   {

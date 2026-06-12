@@ -5,4 +5,4 @@ export const PUBLIC_ROUTES = [
   "/signup",
 ];
 
-export const DEFAULT_LOGIN_REDIRECT = "/meals";
+export const DEFAULT_LOGIN_REDIRECT = "/";

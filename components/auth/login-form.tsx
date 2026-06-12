@@ -5,6 +5,7 @@ import { loginAction } from "@/app/actions/auth";
 import { SubmitButton } from "./submit-button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
+import Link from "next/link";
 
 const initialState = {
   success: false,
@@ -13,20 +14,12 @@ const initialState = {
 };
 
 export function LoginForm() {
-  const [state, formAction] = useActionState(
-    loginAction,
-    initialState
-  );
+  const [state, formAction] = useActionState(loginAction, initialState);
 
   return (
-    <form
-      action={formAction}
-      className="space-y-6"
-    >
+    <form action={formAction} className="space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="email">
-          Email
-        </Label>
+        <Label htmlFor="email">Email</Label>
 
         <Input
           id="email"
@@ -36,17 +29,11 @@ export function LoginForm() {
           aria-invalid={!!state.errors?.email}
         />
 
-        {state.errors?.email && (
-          <p className="text-sm text-destructive">
-            {state.errors.email[0]}
-          </p>
-        )}
+        {state.errors?.email && <p className="text-sm text-destructive">{state.errors.email[0]}</p>}
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password">
-          Password
-        </Label>
+        <Label htmlFor="password">Password</Label>
 
         <Input
           id="password"
@@ -56,28 +43,21 @@ export function LoginForm() {
           aria-invalid={!!state.errors?.password}
         />
 
-        {state.errors?.password && (
-          <p className="text-sm text-destructive">
-            {state.errors.password[0]}
-          </p>
-        )}
+        {state.errors?.password && <p className="text-sm text-destructive">{state.errors.password[0]}</p>}
       </div>
 
       {state.message && (
-        <p
-          className={
-            state.success
-              ? "text-sm text-green-600"
-              : "text-sm text-destructive"
-          }
-        >
-          {state.message}
-        </p>
+        <p className={state.success ? "text-sm text-green-600" : "text-sm text-destructive"}>{state.message}</p>
       )}
 
-      <SubmitButton>
-        Sign In
-      </SubmitButton>
+      <SubmitButton>Sign In</SubmitButton>
+
+      <p className="text-center text-sm text-muted-foreground">
+        Don&apos;t have an account?{" "}
+        <Link href="/signup" className="font-medium text-primary hover:underline">
+          Create one
+        </Link>
+      </p>
     </form>
   );
 }

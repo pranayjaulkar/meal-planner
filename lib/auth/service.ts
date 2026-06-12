@@ -82,3 +82,13 @@ export async function loginUser(data: unknown) {
 
   return { user: sanitizedUser, token };
 }
+
+export async function findUserByEmail(email: string): Promise<UserResponseDto | null> {
+  await connectToDatabase();
+
+  const user = await UserModel.findOne({
+    email,
+  });
+
+  return user ? sanitizeUser(user) : null;
+}
